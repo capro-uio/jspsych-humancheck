@@ -1,0 +1,82 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: Build and unit tests on Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 18 and 20 are what jspsych-contrib's own CI runs, so the package has to keep passing
+        # there; 22 guards against the toolchain breaking on newer Node.
+        node: [18.x, 20.x, 22.x]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test -- --ci
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+      - run: npm ci
+      # Thresholds are passed on the command line rather than written into the package's
+      # jest.config.cjs, because that file is mirrored into jspsych-contrib and a failing gate
+      # there would break their CI rather than ours.
+      - name: Run unit tests with coverage
+        working-directory: packages/extension-humancheck
+        run: >
+          npx jest --ci --coverage
+          --collectCoverageFrom='src/**/*.ts'
+          --collectCoverageFrom='!src/**/*.spec.ts'
+          --coverageThreshold='{"global":{"statements":90,"branches":72,"functions":90,"lines":93}}'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: packages/extension-humancheck/coverage/
+          retention-days: 7
+
+  e2e:
+    name: Adversarial E2E on ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Install Playwright ${{ matrix.browser }}
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Run adversarial suite
+        run: npx playwright test --project=${{ matrix.browser }}
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-${{ matrix.browser }}
+          path: playwright-report/
+          retention-days: 7

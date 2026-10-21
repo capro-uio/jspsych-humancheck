@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>humancheck e2e fixture</title>
+    <script src="/node_modules/jspsych/dist/index.browser.js"></script>
+    <script src="/node_modules/@jspsych/plugin-html-button-response/dist/index.browser.js"></script>
+    <script src="/node_modules/@jspsych/plugin-survey-text/dist/index.browser.js"></script>
+    <script src="/packages/extension-humancheck/dist/index.browser.js"></script>
+    <link rel="stylesheet" href="/node_modules/jspsych/css/jspsych.css" />
+  </head>
+  <body>
+    <script>
+      // Deterministic fixture: fixed canary word, stable ids, and the summary parked on window
+      // so a test can read it without scraping the DOM.
+      const CANARY = "quokka";
+
+      const jsPsych = initJsPsych({
+        extensions: [{ type: jsPsychExtensionHumanCheck }],
+        on_finish: () => {
+          window.__humancheck = jsPsych.extensions.humancheck.summarize();
+          window.__data = jsPsych.data.get().values();
+          document.body.setAttribute("data-finished", "true");
+        },
+      });
+
+      const button = (id, label) => ({
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<p id="${id}" style="font-size:2em;padding:2em">${label}</p>`,
+        choices: ["left", "right", "centre"],
+      });
+
+      window.jsPsych = jsPsych;
+
+      jsPsych.run([
+        {
+          extensions: [{ type: jsPsychExtensionHumanCheck, params: { canary_word: CANARY } }],
+          timeline: [
+            button("t1", "First"),
+            button("t2", "Second"),
+            button("t3", "Third"),
+            {
+              type: jsPsychSurveyText,
+              questions: [{ prompt: "Describe what you can see.", rows: 3, columns: 40 }],
+            },
+          ],
+        },
+      ]);
+    </script>
+  </body>
+</html>
