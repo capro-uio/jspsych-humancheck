@@ -88,28 +88,35 @@ score there would be testing a lie.
 
 ## Citation and DOI
 
-Citation metadata lives in a single place,
-[`packages/extension-humancheck/CITATION.cff`](packages/extension-humancheck/CITATION.cff). GitHub
-renders it as "Cite this repository", Zenodo reads it when archiving a release, and the build bakes
-it into the extension's `info.citations`, so `jsPsych.getCitations()` returns the real citation.
+Archived on Zenodo: [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23541522.svg)](https://doi.org/10.5281/zenodo.23541522)
 
-There is deliberately **no `.zenodo.json`**: if both files exist Zenodo ignores `CITATION.cff`
-entirely, which would leave two sources of truth that drift apart.
+`10.5281/zenodo.23541522` is the **concept DOI**: it always resolves to the newest archived
+version, so a citation does not pin readers to whichever release was current when they looked.
+Each release also gets its own version DOI.
 
-### Minting the DOI (first time only)
+The citation is authored once, in
+[`packages/extension-humancheck/CITATION.cff`](packages/extension-humancheck/CITATION.cff), and the
+build compiles it into the extension's `info.citations`, so `jsPsych.getCitations()` returns a
+citation carrying the DOI and ORCID.
 
-Zenodo issues the DOI *when a release is published*, so the first release cannot contain its own
-DOI. This is a two-step bootstrap:
+### Why there are two copies of CITATION.cff
 
-1. Push this repository to GitHub and make it public.
-2. Enable it in [Zenodo's GitHub settings](https://zenodo.org/account/settings/github/).
-3. Publish release `v0.1.0`. Zenodo archives it and mints two DOIs: a **version DOI** for that
-   release, and a **concept DOI** that always resolves to the newest version.
-4. Uncomment `doi:` in `CITATION.cff` and set it to the **concept DOI**, so citations follow the
-   package rather than pinning readers to `v0.1.0`. Commit it.
+**Zenodo and GitHub only read `CITATION.cff` from the repository root.** The authored copy lives in
+the package directory, because that is what the contrib mirror needs, so an identical copy sits at
+the repository root for Zenodo and GitHub's "Cite this repository" widget.
 
-From the next release onwards the archived snapshot carries its own DOI, and the APA and BibTeX
-strings compiled into the package include it too.
+This is not cosmetic. The v0.1.0 release was archived before the root copy existed, and Zenodo
+silently fell back to GitHub profile metadata: no ORCID, no keywords, the wrong author string and a
+default title. There is no error when this happens, only a record that quietly misattributes the
+work. `npm run check:citation` now fails if the root copy is missing or has drifted.
+
+There is deliberately **no `.zenodo.json`**: if both exist, Zenodo ignores `CITATION.cff` entirely.
+
+### Releasing a new version to Zenodo
+
+Publishing a GitHub release fires the Zenodo webhook, which archives the tag and mints a version
+DOI under the same concept DOI. Keep `version` and `date-released` in `CITATION.cff` current first,
+which `npm run sync:pull` does, or the archived record will describe the wrong release.
 
 ## Releasing
 
