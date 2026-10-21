@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Mowinckel"
+    given-names: "Athanasia Mo"
+title: "extension-humancheck"
+version: 0.1.0
+date-released: 2026-10-21
+url: "https://github.com/jspsych/jspsych-contrib/tree/main/packages/extension-humancheck"
