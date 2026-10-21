@@ -36,11 +36,11 @@
   ],
   "author": {
     "name": "Athanasia Mo Mowinckel",
-    "url": "https://github.com/athanasiamo"
+    "url": "https://github.com/drmowinckels"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jspsych/jspsych-contrib/issues"
+    "url": "https://github.com/drmowinckels/jspsych-humancheck/issues"
   },
   "homepage": "https://github.com/jspsych/jspsych-contrib/tree/main/packages/extension-humancheck",
   "peerDependencies": {

@@ -28,6 +28,17 @@ jobs:
       - run: npm run build
       - run: npm test -- --ci
 
+  metadata:
+    name: Citation metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - name: CITATION.cff matches the package version
+        run: node scripts/check-citation-version.mjs
+
   coverage:
     name: Coverage
     runs-on: ubuntu-latest

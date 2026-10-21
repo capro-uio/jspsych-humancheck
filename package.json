@@ -13,7 +13,9 @@
     "e2e": "playwright test",
     "e2e:install": "playwright install --with-deps",
     "serve": "http-server packages/extension-humancheck -p 4173 -s",
-    "sync:contrib": "node scripts/sync-contrib.mjs"
+    "sync:contrib": "node scripts/sync-contrib.mjs",
+    "sync:pull": "node scripts/sync-contrib.mjs --pull",
+    "check:citation": "node scripts/check-citation-version.mjs"
   },
   "devDependencies": {
     "@jspsych/plugin-survey-text": "^2.1.1",

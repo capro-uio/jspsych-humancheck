@@ -6,12 +6,24 @@
  * sync is a directory copy rather than a file list that can drift. Dev-only tooling lives at the
  * root of this repo and is never copied.
  *
- *   node scripts/sync-contrib.mjs --contrib ../jspsych-contrib [--check]
+ *   node scripts/sync-contrib.mjs --contrib ../jspsych-contrib [--check|--pull]
  *
  * --check exits non-zero if the copy would change anything, for use in CI to catch drift.
+ * --pull  brings back the two things contrib's release process owns rather than this repo: the
+ *         version in package.json and the generated CHANGELOG. Without it the mirror would read as
+ *         permanently out of sync after every release.
  */
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync } from "node:fs";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import { join, relative, resolve } from "node:path";
 
 const PACKAGE_DIR = "packages/extension-humancheck";
@@ -19,6 +31,7 @@ const SKIP = new Set(["node_modules", "dist", "coverage", ".DS_Store"]);
 
 const args = process.argv.slice(2);
 const checkOnly = args.includes("--check");
+const pullBack = args.includes("--pull");
 const contribRoot = resolve(valueOf("--contrib") ?? "../jspsych-contrib");
 const repoRoot = resolve(new URL("..", import.meta.url).pathname);
 
@@ -55,6 +68,40 @@ const changed = filesUnder(source).filter((file) => {
   return readFileSync(join(source, file)).compare(readFileSync(targetFile)) !== 0;
 });
 const removed = filesUnder(target).filter((file) => !existsSync(join(source, file)));
+
+if (pullBack) {
+  const contribPackage = JSON.parse(readFileSync(join(target, "package.json"), "utf8"));
+  const localPath = join(source, "package.json");
+  const localPackage = JSON.parse(readFileSync(localPath, "utf8"));
+  const released = contribPackage.version;
+
+  if (localPackage.version !== released) {
+    const previous = localPackage.version;
+    localPackage.version = released;
+    writeFileSync(localPath, `${JSON.stringify(localPackage, null, 2)}\n`);
+    console.log(`✓ version ${previous} → ${released}`);
+  } else {
+    console.log(`• version already ${released}`);
+  }
+
+  const changelog = join(target, "CHANGELOG.md");
+  if (existsSync(changelog)) {
+    cpSync(changelog, join(source, "CHANGELOG.md"));
+    console.log("✓ CHANGELOG.md pulled back");
+  }
+
+  // Citation metadata has to track the release, or the DOI record describes the wrong version.
+  const citationPath = join(source, "CITATION.cff");
+  const today = new Date().toISOString().slice(0, 10);
+  const citation = readFileSync(citationPath, "utf8")
+    .replace(/^version: .*$/m, `version: ${released}`)
+    .replace(/^date-released: .*$/m, `date-released: "${today}"`);
+  writeFileSync(citationPath, citation);
+  console.log(`✓ CITATION.cff set to ${released}, released ${today}`);
+
+  console.log("\nCommit the result here, then tag and release so Zenodo archives it.");
+  process.exit(0);
+}
 
 if (checkOnly) {
   if (changed.length === 0 && removed.length === 0) {
