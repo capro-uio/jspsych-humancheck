@@ -1,5 +1,8 @@
 # jspsych-humancheck
 
+[![ci](https://github.com/drmowinckels/jspsych-humancheck/actions/workflows/ci.yml/badge.svg)](https://github.com/drmowinckels/jspsych-humancheck/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/@jspsych-contrib/extension-humancheck)](https://www.npmjs.com/package/@jspsych-contrib/extension-humancheck)
+
 Development repository for **[`@jspsych-contrib/extension-humancheck`][npm]**, a jsPsych extension
 that collects evidence a participant is a bot or an AI agent rather than a person, and scores each
 session without blocking anyone.
