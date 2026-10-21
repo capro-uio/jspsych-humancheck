@@ -84,7 +84,7 @@ function hasFinePointer(win: Window): boolean {
  * Collects evidence that a participant is a bot or an AI agent rather than a person, and scores
  * each session without blocking anyone.
  *
- * @author Athanasia Mo Mowinckel
+ * @author Athanasia M. Mowinckel
  * @see {@link https://github.com/jspsych/jspsych-contrib/tree/main/packages/extension-humancheck}
  */
 class HumanCheckExtension implements JsPsychExtension {

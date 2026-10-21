@@ -61,4 +61,4 @@ See [documentation](https://github.com/jspsych/jspsych-contrib/blob/main/package
 
 ## Author / Citation
 
-Created by [Athanasia Mo Mowinckel](https://github.com/drmowinckels).
+Created by [Athanasia M. Mowinckel](https://github.com/drmowinckels).
