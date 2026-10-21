@@ -15,7 +15,8 @@
     "serve": "http-server packages/extension-humancheck -p 4173 -s",
     "sync:contrib": "node scripts/sync-contrib.mjs",
     "sync:pull": "node scripts/sync-contrib.mjs --pull",
-    "check:citation": "node scripts/check-citation-version.mjs"
+    "check:citation": "node scripts/check-citation-version.mjs",
+    "smoke:published": "node scripts/smoke-published.mjs"
   },
   "devDependencies": {
     "@jspsych/plugin-survey-text": "^2.1.1",

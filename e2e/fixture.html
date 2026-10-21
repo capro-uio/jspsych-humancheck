@@ -6,7 +6,10 @@
     <script src="/node_modules/jspsych/dist/index.browser.js"></script>
     <script src="/node_modules/@jspsych/plugin-html-button-response/dist/index.browser.js"></script>
     <script src="/node_modules/@jspsych/plugin-survey-text/dist/index.browser.js"></script>
-    <script src="/packages/extension-humancheck/dist/index.browser.js"></script>
+    <!-- The minified build, because that is what the package's unpkg field serves and therefore
+         what researchers actually load. Testing the unminified one would leave minification
+         unverified. -->
+    <script src="/packages/extension-humancheck/dist/index.browser.min.js"></script>
     <link rel="stylesheet" href="/node_modules/jspsych/css/jspsych.css" />
   </head>
   <body>
