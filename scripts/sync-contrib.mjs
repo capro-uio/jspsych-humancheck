@@ -95,7 +95,9 @@ if (pullBack) {
   const today = new Date().toISOString().slice(0, 10);
   const citation = readFileSync(citationPath, "utf8")
     .replace(/^version: .*$/m, `version: ${released}`)
-    .replace(/^date-released: .*$/m, `date-released: "${today}"`);
+    // Unquoted on purpose: CFF types date-released as a date, and the citation-js version
+    // pinned in jspsych-contrib rejects a quoted string, silently emitting empty citations.
+    .replace(/^date-released: .*$/m, `date-released: ${today}`);
   writeFileSync(citationPath, citation);
   console.log(`✓ CITATION.cff set to ${released}, released ${today}`);
 

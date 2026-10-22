@@ -59,6 +59,12 @@ if (cited !== version) {
 }
 
 if (!/^date-released:/m.test(packageCitation)) fail("CITATION.cff has no date-released.");
+if (!/^date-released: \d{4}-\d{2}-\d{2}\s*$/m.test(packageCitation)) {
+  fail(
+    "date-released must be an unquoted YYYY-MM-DD date.",
+    "CFF types it as a date, and the citation-js version pinned in jspsych-contrib rejects a quoted string, building empty citations instead of failing.",
+  );
+}
 if (!/orcid:/.test(packageCitation)) fail("CITATION.cff has no ORCID, so Zenodo will not record one.");
 if (!/^doi:/m.test(packageCitation)) {
   console.warn("! CITATION.cff has no doi yet. Add the Zenodo concept DOI after the first release.");
