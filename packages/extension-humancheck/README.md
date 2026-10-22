@@ -23,7 +23,7 @@ what to exclude, ideally using criteria preregistered in advance.
 ### In a browser
 
 ```html
-<script src="https://unpkg.com/@jspsych-contrib/extension-humancheck"></script>
+<script src="https://unpkg.com/@jspsych-contrib/extension-humancheck@0.1.0"></script>
 ```
 
 ```js
@@ -55,6 +55,13 @@ import HumanCheckExtension from "@jspsych-contrib/extension-humancheck";
 
 `@jspsych-contrib/extension-humancheck` requires jsPsych v8.0.0 or later.
 
+## Issues
+
+The extension is developed at
+[capro-uio/jspsych-humancheck](https://github.com/capro-uio/jspsych-humancheck), and bug reports and
+feature requests are triaged in
+[that repository's issue tracker](https://github.com/capro-uio/jspsych-humancheck/issues).
+
 ## Documentation
 
 See [documentation](https://github.com/jspsych/jspsych-contrib/blob/main/packages/extension-humancheck/docs/extension-humancheck.md)
@@ -62,3 +69,12 @@ See [documentation](https://github.com/jspsych/jspsych-contrib/blob/main/package
 ## Author / Citation
 
 Created by [Athanasia M. Mowinckel](https://github.com/drmowinckels).
+
+If you use this extension in published work, please cite it:
+
+> Mowinckel, A. M. (2026). *extension-humancheck* (Version 0.1.0) [Computer software].
+> https://doi.org/10.5281/zenodo.23541522
+
+The DOI above is the concept DOI, which always resolves to the newest archived version.
+`jsPsych.getCitations()` returns the same citation in APA or BibTeX, generated from
+[`CITATION.cff`](CITATION.cff).
