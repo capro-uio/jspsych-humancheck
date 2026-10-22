@@ -12,7 +12,7 @@ authors:
     given-names: "Athanasia M."
     orcid: "https://orcid.org/0000-0002-5756-0223"
     affiliation: "Center for Lifespan Changes in Brain and Cognition, University of Oslo"
-repository-code: "https://github.com/drmowinckels/jspsych-humancheck"
+repository-code: "https://github.com/capro-uio/jspsych-humancheck"
 url: "https://github.com/jspsych/jspsych-contrib/tree/main/packages/extension-humancheck"
 license: MIT
 keywords:

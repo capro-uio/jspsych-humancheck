@@ -40,7 +40,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/drmowinckels/jspsych-humancheck/issues"
+    "url": "https://github.com/capro-uio/jspsych-humancheck/issues"
   },
   "homepage": "https://github.com/jspsych/jspsych-contrib/tree/main/packages/extension-humancheck",
   "peerDependencies": {
